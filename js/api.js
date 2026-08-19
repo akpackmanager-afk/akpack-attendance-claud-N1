@@ -17,7 +17,7 @@
 // ---------------------------------------------------------------------------
 
 /** Paste your deployed Apps Script Web App URL here once Stage 8 wiring begins. */
-export const GAS_WEB_APP_URL = ''; /https://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec/ e.g. 'https://script.google.com/macros/s/AKfycb.../exec'
+export const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec';
 
 /**
  * MOCK_MODE runs entirely on in-memory sample data so the UI can be built
