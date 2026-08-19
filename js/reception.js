@@ -32,9 +32,7 @@ export function initReception() {
     modeExitBtn: root.querySelector('[data-mode="exit"]'),
     form: root.querySelector('#reception-form'),
     membershipInput: root.querySelector('#membership-id'),
-    contactInput: root.querySelector('#contact-no'),
     membershipError: root.querySelector('#membership-id-error'),
-    contactError: root.querySelector('#contact-no-error'),
     scanRing: root.querySelector('#scan-ring'),
     scanIcon: root.querySelector('#scan-ring-icon'),
     scanStatus: root.querySelector('#scan-status'),
@@ -52,7 +50,6 @@ export function initReception() {
   };
 
   enforceNumericInput(els.membershipInput, { maxLength: 12 });
-  enforceNumericInput(els.contactInput, { maxLength: 15 });
 
   setMode('entry');
   loadSummary();
@@ -78,12 +75,10 @@ export function initReception() {
     state.verifiedMember = null;
     els.form.reset();
     els.membershipError.textContent = '';
-    els.contactError.textContent = '';
     els.membershipInput.classList.remove('is-invalid');
-    els.contactInput.classList.remove('is-invalid');
     els.resultPanel.hidden = true;
     els.submitBtn.hidden = false;
-    setScanState('idle', 'Enter Membership ID and contact number to verify a member.');
+    setScanState('idle', 'Enter Membership ID to verify a member.');
     els.membershipInput.focus();
   }
 
@@ -98,13 +93,10 @@ export function initReception() {
     if (state.busy) return;
 
     const membershipId = els.membershipInput.value.trim();
-    const contactNo = els.contactInput.value.trim();
-    const { valid, errors } = validateVerificationForm({ membershipId, contactNo });
+    const { valid, errors } = validateVerificationForm({ membershipId });
 
     els.membershipError.textContent = errors.membershipId || '';
-    els.contactError.textContent = errors.contactNo || '';
     els.membershipInput.classList.toggle('is-invalid', Boolean(errors.membershipId));
-    els.contactInput.classList.toggle('is-invalid', Boolean(errors.contactNo));
     if (!valid) return;
 
     state.busy = true;
@@ -112,7 +104,7 @@ export function initReception() {
     els.submitBtn.disabled = true;
 
     try {
-      const member = await api.verifyMember(membershipId, contactNo);
+      const member = await api.verifyMember(membershipId);
       state.verifiedMember = member;
       renderMember(member);
       setScanState('success', `Verified: ${member.clientName}`);
@@ -167,13 +159,13 @@ export function initReception() {
     els.confirmBtn.disabled = true;
     els.confirmBtn.innerHTML = '<span class="spinner"></span>';
 
-    const { membershipId, contactNo } = state.verifiedMember;
+    const { membershipId } = state.verifiedMember;
     try {
       if (state.mode === 'entry') {
-        const result = await api.recordEntry(membershipId, contactNo);
+        const result = await api.recordEntry(membershipId);
         notifySuccess(`Entry recorded for ${result.clientName} at ${formatTime(result.entryTime)}.`);
       } else {
-        const result = await api.recordExit(membershipId, contactNo);
+        const result = await api.recordExit(membershipId);
         notifySuccess(`Exit recorded for ${result.clientName} at ${formatTime(result.exitTime)}.`);
       }
       resetForm();
