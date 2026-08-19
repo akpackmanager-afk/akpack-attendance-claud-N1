@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Admin module
+   ========================================================================== */
+
+.branding-card { margin-bottom: 22px; max-width: 640px; }
+
+.branding-card__body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.branding-card__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 148px;
+}
+
+.branding-card__logo .btn { width: 100%; padding: 9px 12px; font-size: 0.82rem; min-height: auto; }
+
+.branding-logo-preview {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-md);
+  background: var(--ink-100);
+  border: 1.5px dashed var(--ink-200);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--ink-400);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.branding-logo-preview img { width: 100%; height: 100%; object-fit: contain; }
+
+.branding-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+}
+
+@media (max-width: 520px) {
+  .branding-card__body { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .branding-card__form { max-width: none; width: 100%; }
+}
+
+/* Nav brand logo (once uploaded, replaces the default mark icon) */
+.app-nav__brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  padding: 3px;
+}
