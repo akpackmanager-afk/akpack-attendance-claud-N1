@@ -16,14 +16,14 @@
 // Configuration
 // ---------------------------------------------------------------------------
 
-export const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec';
+export const GAS_WEB_APP_URL = 'ehttps://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec';
 
 /**
  * MOCK_MODE runs entirely on in-memory sample data so the UI can be built
  * and previewed before the Apps Script backend is deployed. Flip to false
  * (or simply set GAS_WEB_APP_URL) once the backend is live.
  */
-export const MOCK_MODE = GAS_WEB_APP_URL === '';
+export const MOCK_MODE = GAS_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbywas2UhSjNF_5UjNH6yvkghGXwaPU5KLUS9nqtaSVoH72ztjB9iY0dRtVxX4mDTUY/exec';
 
 // ---------------------------------------------------------------------------
 // Transport
