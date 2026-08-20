@@ -16,7 +16,6 @@
 // Configuration
 // ---------------------------------------------------------------------------
 
-/** Paste your deployed Apps Script Web App URL here once Stage 8 wiring begins. */
 export const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec';
 
 /**
@@ -76,19 +75,19 @@ export class ApiError extends Error {
 // ---------------------------------------------------------------------------
 
 export const api = {
-  /** Verify Membership ID + Contact No resolve to the SAME member row. */
-  verifyMember(membershipId, contactNo) {
-    return callBackend('verifyMember', { membershipId, contactNo });
+  /** Verify a member by Membership ID alone. */
+  verifyMember(membershipId) {
+    return callBackend('verifyMember', { membershipId });
   },
 
   /** Record an Entry for an already-verified member. */
-  recordEntry(membershipId, contactNo) {
-    return callBackend('recordEntry', { membershipId, contactNo });
+  recordEntry(membershipId) {
+    return callBackend('recordEntry', { membershipId });
   },
 
   /** Record an Exit for an already-verified member (requires an open Entry). */
-  recordExit(membershipId, contactNo) {
-    return callBackend('recordExit', { membershipId, contactNo });
+  recordExit(membershipId) {
+    return callBackend('recordExit', { membershipId });
   },
 
   /** Today's Reception dashboard numbers + recent check-ins. */
@@ -150,8 +149,7 @@ export const api = {
 };
 
 // ---------------------------------------------------------------------------
-// Mock backend (Stage 1 preview data — clearly marked, never used once
-// GAS_WEB_APP_URL is set)
+// Mock backend (preview data — only used if GAS_WEB_APP_URL above is empty)
 // ---------------------------------------------------------------------------
 
 const MOCK_MEMBERS = [
@@ -178,10 +176,8 @@ const mockSettings = {
   crowdModerateMax: 14,
 };
 
-function mockFindMember(membershipId, contactNo) {
-  return MOCK_MEMBERS.find(
-    (m) => m.membershipId === String(membershipId) && m.contactNo === String(contactNo)
-  );
+function mockFindMember(membershipId) {
+  return MOCK_MEMBERS.find((m) => m.membershipId === String(membershipId));
 }
 
 function mockMembershipStatus(validityDateIso) {
@@ -198,9 +194,9 @@ async function mockRouter(action, payload) {
 
   switch (action) {
     case 'verifyMember': {
-      const member = mockFindMember(payload.membershipId, payload.contactNo);
+      const member = mockFindMember(payload.membershipId);
       if (!member) {
-        return Promise.reject(new ApiError('Membership ID and mobile number do not match our records.', 'NOT_FOUND'));
+        return Promise.reject(new ApiError('Membership ID not found.', 'NOT_FOUND'));
       }
       return {
         clientName: member.clientName,
@@ -216,8 +212,8 @@ async function mockRouter(action, payload) {
     }
 
     case 'recordEntry': {
-      const member = mockFindMember(payload.membershipId, payload.contactNo);
-      if (!member) throw new ApiError('Membership ID and mobile number do not match our records.', 'NOT_FOUND');
+      const member = mockFindMember(payload.membershipId);
+      if (!member) throw new ApiError('Membership ID not found.', 'NOT_FOUND');
       if (mockOpenEntries.has(member.membershipId)) {
         throw new ApiError('This member already has an active entry today.', 'DUPLICATE_ENTRY');
       }
@@ -228,8 +224,8 @@ async function mockRouter(action, payload) {
     }
 
     case 'recordExit': {
-      const member = mockFindMember(payload.membershipId, payload.contactNo);
-      if (!member) throw new ApiError('Membership ID and mobile number do not match our records.', 'NOT_FOUND');
+      const member = mockFindMember(payload.membershipId);
+      if (!member) throw new ApiError('Membership ID not found.', 'NOT_FOUND');
       const entryTime = mockOpenEntries.get(member.membershipId);
       if (!entryTime) {
         throw new ApiError('Exit cannot be recorded because no active entry was found.', 'NO_OPEN_ENTRY');
@@ -274,7 +270,6 @@ async function mockRouter(action, payload) {
       if (!payload.dataUrl || !payload.dataUrl.startsWith('data:image/')) {
         throw new ApiError('Please choose a valid image file.', 'INVALID_IMAGE');
       }
-      // In mock mode the data URL itself stands in for a hosted Drive URL.
       mockSettings.gymLogoUrl = payload.dataUrl;
       return { gymLogoUrl: payload.dataUrl };
     }
