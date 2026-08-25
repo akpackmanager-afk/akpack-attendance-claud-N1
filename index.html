@@ -13,7 +13,73 @@
 <link rel="stylesheet" href="css/style.css" />
 <link rel="stylesheet" href="css/reception.css" />
 <link rel="stylesheet" href="css/admin.css" />
-<!-- Later stages add: members.css, attendance.css, live-feed.css -->
+<link rel="stylesheet" href="css/live-feed.css" />
+<link rel="stylesheet" href="css/members.css" />
+<style>
+/* ==========================================================================
+   Attendance History module (Admin) — inlined here instead of a separate
+   css/attendance.css so this stage only touches index.html + app.js.
+   ========================================================================== */
+.history-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.history-filters .field__input { padding: 11px 13px; font-size: 0.85rem; font-family: var(--font-body); }
+.history-filters__actions {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  grid-column: 1 / -1;
+}
+@media (min-width: 700px) {
+  .history-filters__actions { grid-column: auto; }
+}
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.history-table th {
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-400);
+  padding: 8px 10px;
+  border-bottom: 1.5px solid var(--ink-100);
+}
+.history-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--ink-100);
+  vertical-align: middle;
+}
+.history-table tr:last-child td { border-bottom: none; }
+.history-table__name { font-weight: 700; }
+.history-table__meta { font-size: 0.76rem; color: var(--ink-600); font-family: var(--font-mono); }
+.history-table__duration { font-weight: 700; color: var(--brand-700); font-family: var(--font-mono); }
+.history-table-wrap { overflow-x: auto; }
+@media (max-width: 640px) {
+  .history-table thead { display: none; }
+  .history-table, .history-table tbody, .history-table tr, .history-table td { display: block; width: 100%; }
+  .history-table tr {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .history-table td { border-bottom: none; padding: 3px 0; }
+  .history-table td::before {
+    content: attr(data-label);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    display: block;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -69,7 +135,7 @@
     </ul>
 
     <div class="app-nav__spacer"></div>
-    <div class="app-nav__footer">Stage 1 build<br>Reception module live</div>
+    <div class="app-nav__footer">Stage 3 build<br>Reception + Live Feed live</div>
   </nav>
 
   <div class="app-main">
@@ -181,31 +247,65 @@
       </div>
     </section>
 
-    <!-- ===================== LIVE FEED (staged) ===================== -->
+    <!-- ===================== LIVE FEED (Stage 3 — live) ===================== -->
     <section class="app-view" data-view="live-feed" id="view-live-feed">
-      <div class="stub-view">
-        <h2>Live Attendance Feed</h2>
-        <p>Real-time entries combined with member details will appear here.</p>
-        <span class="stub-view__tag">Arriving in Stage 3</span>
+      <div class="feed-toolbar">
+        <input type="text" class="feed-search" id="feed-search" placeholder="Search by name, Membership ID or contact number…" />
+        <div class="feed-filters">
+          <button type="button" class="feed-filter-chip is-active" data-status="all">All</button>
+          <button type="button" class="feed-filter-chip" data-status="Active">Active</button>
+          <button type="button" class="feed-filter-chip" data-status="Expiring Soon">Expiring Soon</button>
+          <button type="button" class="feed-filter-chip" data-status="Expired">Expired</button>
+        </div>
+        <span class="feed-live-dot">Live</span>
       </div>
+      <div class="feed-grid" id="feed-grid"></div>
     </section>
 
-    <!-- ===================== MEMBERS (staged) ===================== -->
+    <!-- ===================== MEMBERS (Stage 4 — live) ===================== -->
     <section class="app-view" data-view="members" id="view-members">
-      <div class="stub-view">
-        <h2>Members</h2>
-        <p>Search, profiles, and the member attendance calendar will appear here.</p>
-        <span class="stub-view__tag">Arriving in Stage 4</span>
+      <div id="members-list-view">
+        <input type="text" class="members-search" id="members-search" placeholder="Search by name, Membership ID or contact number…" />
+        <div class="member-list" id="member-list"></div>
+      </div>
+      <div id="members-profile-view" hidden>
+        <button type="button" class="profile-back" id="profile-back-btn">&larr; Back to Members</button>
+        <div id="members-profile-content"></div>
       </div>
     </section>
 
-    <!-- ===================== ATTENDANCE (staged) ===================== -->
+    <!-- ===================== ATTENDANCE (Stage 2 — live) ===================== -->
     <section class="app-view" data-view="attendance" id="view-attendance">
-      <div class="stub-view">
-        <h2>Attendance</h2>
-        <p>Filterable entry/exit history will appear here.</p>
-        <span class="stub-view__tag">Arriving in Stage 2</span>
+      <div class="card">
+        <h3 style="margin-bottom:14px; font-size:1rem;">Filter Attendance History</h3>
+        <div class="history-filters">
+          <div class="field">
+            <label class="field__label" for="hist-date-from">From Date</label>
+            <input type="date" class="field__input" id="hist-date-from" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="hist-date-to">To Date</label>
+            <input type="date" class="field__input" id="hist-date-to" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="hist-client-name">Client Name</label>
+            <input type="text" class="field__input" id="hist-client-name" placeholder="Name" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="hist-membership-id">Membership ID</label>
+            <input type="text" class="field__input" id="hist-membership-id" placeholder="ID" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="hist-contact-no">Contact Number</label>
+            <input type="text" class="field__input" id="hist-contact-no" placeholder="Phone" />
+          </div>
+          <div class="history-filters__actions">
+            <button type="button" class="btn btn--primary" id="hist-search-btn">Search</button>
+            <button type="button" class="btn btn--ghost" id="hist-clear-btn">Clear</button>
+          </div>
+        </div>
       </div>
+      <div class="card" style="margin-top:16px;" id="hist-results"></div>
     </section>
 
     <!-- ===================== ADMIN (staged) ===================== -->
