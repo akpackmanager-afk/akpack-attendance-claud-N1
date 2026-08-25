@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Members module
+   ========================================================================== */
+
+.members-search {
+  width: 100%;
+  border: 1.5px solid var(--ink-200);
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-size: 0.92rem;
+  margin-bottom: 16px;
+  background: var(--surface);
+}
+.members-search:focus { border-color: var(--brand-500); box-shadow: 0 0 0 4px var(--brand-100); outline: none; }
+
+.member-list { display: flex; flex-direction: column; gap: 8px; }
+
+.member-row-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.12s var(--ease), box-shadow 0.12s var(--ease);
+}
+.member-row-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-pop); }
+
+.member-row-card__body { flex: 1; min-width: 0; }
+.member-row-card__name { font-weight: 700; font-size: 0.92rem; }
+.member-row-card__meta { font-size: 0.78rem; color: var(--ink-600); font-family: var(--font-mono); }
+.member-row-card__badges { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ---- Profile view ---- */
+
+.profile-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--ink-600);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 6px 2px;
+  margin-bottom: 14px;
+}
+.profile-back:hover { color: var(--ink-950); }
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.profile-header .member-avatar { width: 58px; height: 58px; font-size: 1.3rem; }
+.profile-header__name { font-size: 1.2rem; font-weight: 700; }
+.profile-header__meta { font-size: 0.85rem; color: var(--ink-600); font-family: var(--font-mono); margin-top: 2px; }
+.profile-header__badges { margin-left: auto; display: flex; gap: 6px; }
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) { .profile-layout { grid-template-columns: 1fr; } }
+
+.profile-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+.profile-detail-grid .member-result__item-label { font-size: 0.68rem; }
+
+/* ---- Calendar ---- */
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.calendar-nav__title { font-weight: 700; font-family: var(--font-display); }
+.calendar-nav__btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-200);
+  background: var(--surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--ink-600);
+}
+.calendar-nav__btn:hover { background: var(--ink-100); }
+
+.calendar-weekdays, .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendar-weekdays {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--ink-400);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-600);
+  background: var(--ink-100);
+  position: relative;
+}
+.calendar-day--empty { background: transparent; }
+.calendar-day--attended { background: var(--brand-100); color: var(--brand-700); }
+.calendar-day--attended::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--brand-500);
+}
+
+.calendar-log { margin-top: 18px; display: flex; flex-direction: column; gap: 2px; }
+.calendar-log-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--ink-100);
+  font-size: 0.83rem;
+}
+.calendar-log-row:last-child { border-bottom: none; }
+.calendar-log-row__date { font-weight: 700; width: 92px; flex-shrink: 0; }
+.calendar-log-row__times { flex: 1; color: var(--ink-600); font-family: var(--font-mono); font-size: 0.78rem; }
+.calendar-log-row__duration { font-weight: 700; color: var(--brand-700); font-family: var(--font-mono); font-size: 0.8rem; }
