@@ -16,7 +16,7 @@
 // Configuration
 // ---------------------------------------------------------------------------
 
-export const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyOR3yBY_KES4cBUUZako5NK1paQVCXkZWFdUnu01u5xB9Hi0-h_g0mzg6HVJsCIVs/exec';
+export const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz8GlaTE09VqDc0yOQUFuNczrvkh3CqLybyJzWG8nT9ZfiiojFBvc90SAcksja9uYwO/exec';
 
 /**
  * MOCK_MODE runs entirely on in-memory sample data so the UI can be built
